@@ -1,0 +1,49 @@
+include:
+  - project: 'vip/devops/include-templates'
+    ref: main
+    file: '/.service-app-template.yml'
+
+stages:
+  - Build
+  - Deploy FEATURE
+  - Deploy DEV
+  - Deploy TEST
+  - Deploy PROD
+  - Release
+  - Schedules
+
+variables:
+  JAVA_MAJOR_VERSION: 17
+  DEPLOY_REPO_NAME: >-
+    devops-api-service-deploy
+
+Build & Test:
+  variables:
+    JIB_FROM_IMAGE_TAG: 2
+
+Deploy FEATURE:
+  environment:
+    name: devops-api-service-feature
+    url: https://devops-api-service-feature.apps.vipdev.dg-i.net
+
+Deploy DEV:
+  variables:
+    #TODO: delete CLUSTER variable after Ticket [TRIP07-508] is closed
+    CLUSTER: main
+    WORKDIR: devops-api-service
+  script:
+    - kustomize edit set image devops-api-service=${CI_REGISTRY_IMAGE}:${DOCKER_IMAGE}
+    - !reference [.deploy-git-push, script]
+  environment:
+    name: devops-api-service-dev
+    url: https://devops-api-service-dev.apps.vipdev.dg-i.net
+
+Deploy TEST:
+  variables:
+    #TODO: delete CLUSTER variable after Ticket [TRIP07-508] is closed
+    CLUSTER: main
+  environment:
+    name: devops-api-service-test
+    url: https://devops-api-service-test.apps.vipdev.dg-i.net
+    kubernetes:
+      namespace: devops-api-service-test
