@@ -27,7 +27,7 @@
     <guava.version>31.1-jre</guava.version>
     <java.version>17</java.version>
 
-    <logstash-logback-encoder.version>7.0.1</logstash-logback-encoder.version>
+    <logstash-logback-encoder.version>7.2</logstash-logback-encoder.version>
 
     <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
     <maven-failsafe-plugin.version>3.0.0-M5</maven-failsafe-plugin.version>
