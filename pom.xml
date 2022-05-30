@@ -29,7 +29,7 @@
 
     <logstash-logback-encoder.version>7.0.1</logstash-logback-encoder.version>
 
-    <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
+    <maven-surefire-plugin.version>3.0.0-M6</maven-surefire-plugin.version>
     <maven-failsafe-plugin.version>3.0.0-M5</maven-failsafe-plugin.version>
     <deploy.skip>true</deploy.skip>
   </properties>
