@@ -1,0 +1,33 @@
+# Can be adjusted with docker build --build-arg RUNTIME_IMAGE=mirror.com/openjdk:17
+ARG BUILDER_IMAGE=eclipse-temurin:17-jdk
+ARG RUNTIME_IMAGE=eclipse-temurin:17-jre
+
+FROM ${BUILDER_IMAGE} AS BUILDER
+
+WORKDIR /app/
+
+ARG MAVEN_CLI_OPTS="-ntp -B"
+
+COPY .mvn .mvn
+COPY mvnw .
+COPY pom.xml .
+
+RUN ./mvnw ${MAVEN_CLI_OPTS} -q dependency:go-offline
+
+COPY src src
+
+RUN ./mvnw ${MAVEN_CLI_OPTS} clean package -DskipTests \
+    -Dlicense.skipCheckLicense -Dcheckstyle.skip -Dmaven.test.skip=true -Dmaven.site.skip=true \
+    -Dmaven.javadoc.skip=true -Dmaven.gitcommitid.skip=true
+
+FROM ${RUNTIME_IMAGE}
+
+ARG JAR=./target/demo-app.jar
+ENV JAVA_OPTS="" KEYCLOAK_SSL_VERIFY=true IMPORT_FILES_LOCATIONS=file:/config/*
+
+# $0 represents the first CLI arg which is not inside $@
+ENTRYPOINT exec java $JAVA_OPTS -jar /app/demo-app.jar $0 $@
+
+COPY --from=BUILDER /app/target/demo-app.jar /app/demo-app.jar
+
+USER 65534:65534
