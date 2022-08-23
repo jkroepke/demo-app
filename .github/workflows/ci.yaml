@@ -25,42 +25,12 @@ jobs:
           java-version: 17
           cache: maven
 
-      - name: Build & Test
-        run: mvn ${MAVEN_CLI_OPTS} clean verify
-  docker:
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    steps:
-      -
-        name: Checkout
-        uses: actions/checkout@v3
-      -
-        name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      -
-        name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Docker meta
-        id: meta
-        uses: docker/metadata-action@v4
-        with:
-          images: jkroepke/demo-app
-          labels: |
-            maintainer=Jan-Otto Kröpke
-      -
-        name: Login to DockerHub
+      - name: Login to DockerHub
         uses: docker/login-action@v2
         if: github.event_name != 'pull_request'
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      -
-        name: Build and push
-        uses: docker/build-push-action@v3
-        with:
-          context: .
-          push: ${{ github.event_name != 'pull_request' }}
-          platforms: linux/amd64,linux/arm64
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Build & Test
+        run: mvn ${MAVEN_CLI_OPTS} clean verify ${{ github.event_name != 'pull_request' && 'jib:build' || '' }}
