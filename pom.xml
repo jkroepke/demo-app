@@ -24,7 +24,6 @@
   </scm>
 
   <properties>
-    <guava.version>31.1-jre</guava.version>
     <java.version>17</java.version>
 
     <logstash-logback-encoder.version>7.2</logstash-logback-encoder.version>
@@ -47,15 +46,14 @@
     </dependency>
 
     <dependency>
-      <groupId>io.micrometer</groupId>
-      <artifactId>micrometer-registry-prometheus</artifactId>
-      <scope>runtime</scope>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-webflux</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-      <version>${guava.version}</version>
+      <groupId>io.micrometer</groupId>
+      <artifactId>micrometer-registry-prometheus</artifactId>
+      <scope>runtime</scope>
     </dependency>
 
     <!-- JSON logging -->
