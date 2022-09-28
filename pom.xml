@@ -105,6 +105,9 @@
           </from>
           <to>
             <image>jkroepke/demo-app</image>
+            <tags>
+              <tag>main</tag>
+            </tags>
           </to>
         </configuration>
       </plugin>
