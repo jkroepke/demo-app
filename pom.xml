@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.7.4</version>
+    <version>2.7.1</version>
   </parent>
 
   <groupId>io.github.jkroepke</groupId>
@@ -26,6 +26,8 @@
   <properties>
     <java.version>17</java.version>
 
+    <spring-boot.build-image.imageName>jkroepke/demo-app</spring-boot.build-image.imageName>
+
     <logstash-logback-encoder.version>7.2</logstash-logback-encoder.version>
 
     <maven-surefire-plugin.version>3.0.0-M7</maven-surefire-plugin.version>
@@ -33,6 +35,20 @@
     <deploy.skip>true</deploy.skip>
   </properties>
 
+  <repositories>
+    <repository>
+      <id>spring-release</id>
+      <name>Spring release</name>
+      <url>https://repo.spring.io/release</url>
+    </repository>
+  </repositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>spring-release</id>
+      <name>Spring release</name>
+      <url>https://repo.spring.io/release</url>
+    </pluginRepository>
+  </pluginRepositories>
 
   <dependencies>
     <dependency>
@@ -54,6 +70,12 @@
       <groupId>io.micrometer</groupId>
       <artifactId>micrometer-registry-prometheus</artifactId>
       <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.experimental</groupId>
+      <artifactId>spring-native</artifactId>
+      <version>0.12.1</version>
     </dependency>
 
     <!-- JSON logging -->
@@ -82,7 +104,32 @@
         <artifactId>maven-failsafe-plugin</artifactId>
         <version>${maven-failsafe-plugin.version}</version>
       </plugin>
-
+      <plugin>
+        <groupId>org.springframework.experimental</groupId>
+        <artifactId>spring-aot-maven-plugin</artifactId>
+        <version>0.12.1</version>
+        <executions>
+          <execution>
+            <id>generate</id>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <configuration>
+          <image>
+            <builder>paketobuildpacks/builder:tiny</builder>
+            <env>
+              <BP_NATIVE_IMAGE>true</BP_NATIVE_IMAGE>
+            </env>
+          </image>
+        </configuration>
+      </plugin>
+      <!--
       <plugin>
         <groupId>com.google.cloud.tools</groupId>
         <artifactId>jib-maven-plugin</artifactId>
@@ -109,6 +156,7 @@
           </to>
         </configuration>
       </plugin>
+      -->
     </plugins>
   </build>
 </project>
