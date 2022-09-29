@@ -1,4 +1,4 @@
-package io.github.jkroepke.demo;
+package io.github.jkroepke.demo.controller;
 
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;

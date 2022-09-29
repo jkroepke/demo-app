@@ -1,4 +1,4 @@
-package io.github.jkroepke.demo;
+package io.github.jkroepke.demo.controller;
 
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
