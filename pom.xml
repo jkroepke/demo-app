@@ -26,7 +26,7 @@
   <properties>
     <java.version>17</java.version>
 
-    <spring-boot.build-image.imageName>jkroepke/demo-app</spring-boot.build-image.imageName>
+    <spring-boot.build-image.imageName>jkroepke/demo-app:native</spring-boot.build-image.imageName>
 
     <logstash-logback-encoder.version>7.2</logstash-logback-encoder.version>
 
@@ -54,6 +54,21 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.tomcat.embed</groupId>
+          <artifactId>tomcat-embed-core</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.apache.tomcat.embed</groupId>
+          <artifactId>tomcat-embed-websocket</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tomcat.experimental</groupId>
+      <artifactId>tomcat-embed-programmatic</artifactId>
+      <version>${tomcat.version}</version>
     </dependency>
 
     <dependency>
@@ -76,6 +91,12 @@
       <groupId>org.springframework.experimental</groupId>
       <artifactId>spring-native</artifactId>
       <version>0.12.1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.codehaus.janino</groupId>
+      <artifactId>janino</artifactId>
+      <version>3.1.6</version>
     </dependency>
 
     <!-- JSON logging -->
@@ -108,6 +129,11 @@
         <groupId>org.springframework.experimental</groupId>
         <artifactId>spring-aot-maven-plugin</artifactId>
         <version>0.12.1</version>
+        <configuration>
+          <removeXmlSupport>false</removeXmlSupport>
+          <removeSpelSupport>false</removeSpelSupport>
+          <removeYamlSupport>true</removeYamlSupport>
+        </configuration>
         <executions>
           <execution>
             <id>generate</id>
@@ -129,7 +155,6 @@
           </image>
         </configuration>
       </plugin>
-      <!--
       <plugin>
         <groupId>com.google.cloud.tools</groupId>
         <artifactId>jib-maven-plugin</artifactId>
@@ -156,7 +181,6 @@
           </to>
         </configuration>
       </plugin>
-      -->
     </plugins>
   </build>
 </project>
