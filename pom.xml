@@ -25,6 +25,8 @@
 
   <properties>
     <java.version>17</java.version>
+    <deploy.skip>true</deploy.skip>
+    <start-class>io.github.jkroepke.demo.DemoApplication</start-class>
 
     <spring-boot.build-image.imageName>jkroepke/demo-app:native</spring-boot.build-image.imageName>
 
@@ -32,45 +34,12 @@
 
     <maven-surefire-plugin.version>3.0.0-M7</maven-surefire-plugin.version>
     <maven-failsafe-plugin.version>3.0.0-M7</maven-failsafe-plugin.version>
-    <deploy.skip>true</deploy.skip>
+    <spring-aot-maven-plugin.version>0.12.1</spring-aot-maven-plugin.version>
+    <spring-native.version>0.12.1</spring-native.version>
+    <janino.version>3.1.6</janino.version>
   </properties>
 
-  <repositories>
-    <repository>
-      <id>spring-release</id>
-      <name>Spring release</name>
-      <url>https://repo.spring.io/release</url>
-    </repository>
-  </repositories>
-  <pluginRepositories>
-    <pluginRepository>
-      <id>spring-release</id>
-      <name>Spring release</name>
-      <url>https://repo.spring.io/release</url>
-    </pluginRepository>
-  </pluginRepositories>
-
   <dependencies>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.tomcat.embed</groupId>
-          <artifactId>tomcat-embed-core</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.tomcat.embed</groupId>
-          <artifactId>tomcat-embed-websocket</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.tomcat.experimental</groupId>
-      <artifactId>tomcat-embed-programmatic</artifactId>
-      <version>${tomcat.version}</version>
-    </dependency>
-
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-actuator</artifactId>
@@ -85,18 +54,6 @@
       <groupId>io.micrometer</groupId>
       <artifactId>micrometer-registry-prometheus</artifactId>
       <scope>runtime</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework.experimental</groupId>
-      <artifactId>spring-native</artifactId>
-      <version>0.12.1</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.codehaus.janino</groupId>
-      <artifactId>janino</artifactId>
-      <version>3.1.6</version>
     </dependency>
 
     <!-- JSON logging -->
@@ -126,36 +83,6 @@
         <version>${maven-failsafe-plugin.version}</version>
       </plugin>
       <plugin>
-        <groupId>org.springframework.experimental</groupId>
-        <artifactId>spring-aot-maven-plugin</artifactId>
-        <version>0.12.1</version>
-        <configuration>
-          <removeXmlSupport>false</removeXmlSupport>
-          <removeSpelSupport>false</removeSpelSupport>
-          <removeYamlSupport>true</removeYamlSupport>
-        </configuration>
-        <executions>
-          <execution>
-            <id>generate</id>
-            <goals>
-              <goal>generate</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-maven-plugin</artifactId>
-        <configuration>
-          <image>
-            <builder>paketobuildpacks/builder:tiny</builder>
-            <env>
-              <BP_NATIVE_IMAGE>true</BP_NATIVE_IMAGE>
-            </env>
-          </image>
-        </configuration>
-      </plugin>
-      <plugin>
         <groupId>com.google.cloud.tools</groupId>
         <artifactId>jib-maven-plugin</artifactId>
         <version>3.3.0</version>
@@ -183,4 +110,95 @@
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>native</id>
+
+      <repositories>
+        <repository>
+          <id>spring-release</id>
+          <name>Spring release</name>
+          <url>https://repo.spring.io/release</url>
+        </repository>
+      </repositories>
+      <pluginRepositories>
+        <pluginRepository>
+          <id>spring-release</id>
+          <name>Spring release</name>
+          <url>https://repo.spring.io/release</url>
+        </pluginRepository>
+      </pluginRepositories>
+
+      <dependencies>
+        <dependency>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-web</artifactId>
+          <exclusions>
+            <exclusion>
+              <groupId>org.apache.tomcat.embed</groupId>
+              <artifactId>tomcat-embed-core</artifactId>
+            </exclusion>
+            <exclusion>
+              <groupId>org.apache.tomcat.embed</groupId>
+              <artifactId>tomcat-embed-websocket</artifactId>
+            </exclusion>
+          </exclusions>
+        </dependency>
+
+        <dependency>
+          <groupId>org.apache.tomcat.experimental</groupId>
+          <artifactId>tomcat-embed-programmatic</artifactId>
+          <version>${tomcat.version}</version>
+        </dependency>
+
+        <dependency>
+          <groupId>org.springframework.experimental</groupId>
+          <artifactId>spring-native</artifactId>
+          <version>${spring-native.version}</version>
+        </dependency>
+
+        <dependency>
+          <groupId>org.codehaus.janino</groupId>
+          <artifactId>janino</artifactId>
+          <version>${janino.version}</version>
+        </dependency>
+      </dependencies>
+
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.springframework.experimental</groupId>
+            <artifactId>spring-aot-maven-plugin</artifactId>
+            <version>${spring-aot-maven-plugin.version}</version>
+            <configuration>
+              <removeXmlSupport>false</removeXmlSupport>
+              <removeSpelSupport>false</removeSpelSupport>
+              <removeYamlSupport>true</removeYamlSupport>
+            </configuration>
+            <executions>
+              <execution>
+                <id>generate</id>
+                <goals>
+                  <goal>generate</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
+            <configuration>
+              <image>
+                <builder>paketobuildpacks/builder:tiny</builder>
+                <env>
+                  <BP_NATIVE_IMAGE>true</BP_NATIVE_IMAGE>
+                </env>
+              </image>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
