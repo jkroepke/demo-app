@@ -33,4 +33,10 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build & Test
-        run: mvn ${MAVEN_CLI_OPTS} clean verify ${{ github.event_name != 'pull_request' && 'jib:build' || '' }}
+        run: |
+          mvn ${MAVEN_CLI_OPTS} package ${{ github.event_name != 'pull_request' && 'jib:build' || '' }}
+          mvn ${MAVEN_CLI_OPTS} -Pnative spring-boot:build-image
+
+      - name: docker push jkroepke/demo-app:native
+        if: github.event_name != 'pull_request'
+        run: docker push jkroepke/demo-app:native
