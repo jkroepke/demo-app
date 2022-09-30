@@ -15,15 +15,16 @@ public class Welcome {
     @Value("${body.text}")
     private String bodyText;
 
-    private static final String HTML = "<!DOCTYPE html>\n" +
-            "<html>\n" +
-            "    <head>\n" +
-            "        <title>Spring Boot Demo</title>\n" +
-            "    </head>\n" +
-            "    <body style=\"color: %s ; background: %s ; width: 100%%; height: 100%%;\">\n" +
-            "       <h1>%s</h1>" +
-            "    </body>\n" +
-            "</html>";
+    private static final String HTML = """
+        <!DOCTYPE html>
+        <html>
+            <head>
+                <title>Spring Boot Demo</title>
+            </head>
+            <body style="color: %s ; background: %s ; width: 100%%; height: 100%%;">
+                <h1>%s</h1>
+            </body>
+        </html>""";
 
     @GetMapping(value = "/", produces = "text/html;charset=UTF-8")
     public String index() {

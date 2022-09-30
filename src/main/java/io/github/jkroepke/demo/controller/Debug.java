@@ -10,6 +10,18 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 public class Debug {
+    @GetMapping("/debug/cgroup")
+    public Map<String, Object> doCgroupDebug(HttpServletRequest request) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("Available processors (cores): ", Runtime.getRuntime().availableProcessors());
+        map.put("Free memory (bytes): ", Runtime.getRuntime().freeMemory());
+
+        long maxMemory = Runtime.getRuntime().maxMemory();
+        map.put("Maximum memory (bytes): ", (maxMemory == Long.MAX_VALUE ? "no limit" : maxMemory));
+        map.put("Total memory (bytes): ", Runtime.getRuntime().totalMemory());
+
+        return new TreeMap<>(map);
+    }
     @GetMapping("/debug/jvm")
     public Map<String, String> doJvmDebug(HttpServletRequest request) {
         Map<String, String> map = new HashMap<>();
