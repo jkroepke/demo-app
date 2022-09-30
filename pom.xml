@@ -36,7 +36,7 @@
     <maven-failsafe-plugin.version>3.0.0-M7</maven-failsafe-plugin.version>
     <spring-aot-maven-plugin.version>0.12.1</spring-aot-maven-plugin.version>
     <spring-native.version>0.12.1</spring-native.version>
-    <janino.version>3.1.6</janino.version>
+    <janino.version>3.1.8</janino.version>
   </properties>
 
   <dependencies>
