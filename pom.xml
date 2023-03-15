@@ -33,7 +33,7 @@
     <logstash-logback-encoder.version>7.2</logstash-logback-encoder.version>
 
     <maven-surefire-plugin.version>3.0.0-M7</maven-surefire-plugin.version>
-    <maven-failsafe-plugin.version>3.0.0-M7</maven-failsafe-plugin.version>
+    <maven-failsafe-plugin.version>3.0.0</maven-failsafe-plugin.version>
     <spring-aot-maven-plugin.version>0.12.1</spring-aot-maven-plugin.version>
     <spring-native.version>0.12.1</spring-native.version>
     <janino.version>3.1.8</janino.version>
