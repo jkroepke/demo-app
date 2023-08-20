@@ -3,7 +3,7 @@ package io.github.jkroepke.demo.controller;
 import io.awspring.cloud.autoconfigure.core.AwsClientBuilderConfigurer;
 import io.awspring.cloud.s3.S3Resource;
 import io.awspring.cloud.s3.S3Template;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@Profile("aws")
 public class AWS {;
 
     private final AwsClientBuilderConfigurer awsClientBuilderConfigurer;
@@ -30,7 +31,6 @@ public class AWS {;
     private final S3Client s3Client;
     private final S3Template s3Template;
 
-    @Autowired
     AWS(AwsClientBuilderConfigurer awsClientBuilderConfigurer, AwsRegionProvider regionProvider, S3Client s3Client, S3Template s3Template) {
         this.awsClientBuilderConfigurer = awsClientBuilderConfigurer;
         this.regionProvider = regionProvider;
