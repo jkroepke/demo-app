@@ -149,6 +149,13 @@
             <plugin>
                 <groupId>org.graalvm.buildtools</groupId>
                 <artifactId>native-maven-plugin</artifactId>
+                <configuration>
+                    <buildArgs>
+                        <arg>--verbose</arg>
+                        <arg>--initialize-at-build-time=org.slf4j.LoggerFactory,ch.qos.logback</arg>
+                        <arg>--trace-class-initialization=ch.qos.logback.core.status.InfoStatus,ch.qos.logback.core.util.StatusPrinter,ch.qos.logback.classic.Level,ch.qos.logback.classic.Logger,ch.qos.logback.core.util.Loader,ch.qos.logback.core.status.StatusBase</arg>
+                    </buildArgs>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
