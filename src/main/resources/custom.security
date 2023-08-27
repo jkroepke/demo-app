@@ -1,0 +1,2 @@
+# https://github.com/Azure/azure-sdk-for-java/issues/30320
+jdk.jar.disabledAlgorithms=MD2, MD5, RSA, DSA

@@ -119,39 +119,21 @@
             <artifactId>spring-cloud-azure-starter</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.conscrypt</groupId>
-            <artifactId>conscrypt-openjdk</artifactId>
-            <version>2.5.2</version>
-            <classifier>${os.detected.classifier}</classifier>
-        </dependency>
-        <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk18on</artifactId>
             <version>1.76</version>
         </dependency>
-        <dependency>
-            <groupId>com.github.luben</groupId>
-            <artifactId>zstd-jni</artifactId>
-            <version>1.5.5-5</version>
-            <!--<classifier>${os.name}</classifier>-->
-        </dependency>
     </dependencies>
 
     <build>
-        <extensions>
-            <extension>
-                <groupId>kr.motd.maven</groupId>
-                <artifactId>os-maven-plugin</artifactId>
-                <version>1.4.1.Final</version>
-            </extension>
-        </extensions>
         <plugins>
             <plugin>
                 <groupId>org.graalvm.buildtools</groupId>
                 <artifactId>native-maven-plugin</artifactId>
+                <!-- https://github.com/Azure/azure-sdk-for-java/issues/30320 -->
                 <configuration>
                     <buildArgs>
-                        <arg>--verbose</arg>
+                        <arg>-Djava.security.properties=src/main/resources/custom.security</arg>
                         <arg>--initialize-at-build-time=org.slf4j.LoggerFactory,ch.qos.logback</arg>
                         <arg>--trace-class-initialization=ch.qos.logback.core.status.InfoStatus,ch.qos.logback.core.util.StatusPrinter,ch.qos.logback.classic.Level,ch.qos.logback.classic.Logger,ch.qos.logback.core.util.Loader,ch.qos.logback.core.status.StatusBase</arg>
                     </buildArgs>
@@ -160,6 +142,14 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <image>
+                        <env>
+                            <BP_NATIVE_IMAGE_BUILD_ARGUMENTS>-Djava.security.properties=/workspace/BOOT-INF/classes/custom.security --initialize-at-build-time=org.slf4j.LoggerFactory,ch.qos.logback --trace-class-initialization=ch.qos.logback.core.status.InfoStatus,ch.qos.logback.core.util.StatusPrinter,ch.qos.logback.classic.Level,ch.qos.logback.classic.Logger,ch.qos.logback.core.util.Loader,ch.qos.logback.core.status.StatusBase</BP_NATIVE_IMAGE_BUILD_ARGUMENTS>
+                            <BP_BINARY_COMPRESSION_METHOD>upx</BP_BINARY_COMPRESSION_METHOD>
+                        </env>
+                    </image>
+                </configuration>
             </plugin>
 
             <plugin>
